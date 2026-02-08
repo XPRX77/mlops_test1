@@ -1,0 +1,43 @@
+name: Train and test
+
+on:
+    push:
+        branches: [ main ]
+    pull_request:
+        branches: [ main ]
+
+jobs:
+    Stage1:
+        name: Train and Test model script
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                python: [3.10 3.11 3.12]
+        steps:
+            - name: Checkout the branch and get the latest data
+              uses: actions/checkout@4
+
+            - name: Setting up python
+              uses: actions/setup-python@v4
+              with:
+                python-version: ${{ matrix.python }}
+
+            - name: Upgrading pip related dependencies
+              run: python -m pip install --upgrade pip setuptools wheel
+
+            - name: Installing required modules
+              run: python -m pip instlll -r requirements.txt
+
+            - name: Running the Training script
+              run: |
+                python train.py
+                ls -lart artifacts
+
+            - name: Upload the model and metric files as Artifacts
+              uses: actions/upload-artifcts@v4
+              with:
+                name: Model-output-${{ matrix.python }}-${{ github.run_id }}
+                path: artifacts
+
+
+                
