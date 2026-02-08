@@ -34,7 +34,7 @@ jobs:
                 ls -lart artifacts
 
             - name: Upload the model and metric files as Artifacts
-              uses: actions/upload-artifcts@v4
+              uses: actions/upload-artifact@v4
               with:
                 name: Model-output-${{ matrix.python }}-${{ github.run_id }}
                 path: artifacts
